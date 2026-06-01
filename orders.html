@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f1f3f6;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#2874f0;
+}
+
+.order{
+    background:white;
+    padding:15px;
+    margin:15px 0;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.item{
+    margin-left:15px;
+}
+</style>
+</head>
+<body>
+
+<h1>📦 My Orders</h1>
+
+<div id="ordersContainer"></div>
+
+<script>
+
+let orders =
+JSON.parse(localStorage.getItem("orders")) || [];
+
+let container =
+document.getElementById("ordersContainer");
+
+if(orders.length === 0){
+
+    container.innerHTML =
+    "<h3>No Orders Found</h3>";
+
+}else{
+
+    orders.reverse().forEach(order=>{
+
+        let itemsHtml = "";
+
+        order.items.forEach(item=>{
+            itemsHtml += `
+            <div class="item">
+                • ${item.name}
+                (Qty: ${item.quantity})
+            </div>
+            `;
+        });
+
+        container.innerHTML += `
+        <div class="order">
+
+            <h3>Order ID:
+            ${order.orderId}</h3>
+
+            <p><b>Status:</b>
+            ${order.status}</p>
+
+            <p><b>Date:</b>
+            ${order.date}</p>
+
+            <p><b>Name:</b>
+            ${order.name}</p>
+
+            <p><b>Phone:</b>
+            ${order.phone}</p>
+
+            <p><b>Address:</b>
+            ${order.address}</p>
+
+            <hr>
+
+            <h4>Items:</h4>
+
+            ${itemsHtml}
+
+        </div>
+        `;
+    });
+}
+
+</script>
+
+</body>
+</html>

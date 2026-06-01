@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MK Mega Store - Cart</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f1f3f6;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    color:#2874f0;
+    margin-bottom:20px;
+}
+
+.cart-container{
+    max-width:900px;
+    margin:auto;
+}
+
+.cart-item{
+    background:white;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart-item img{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.item-details{
+    flex:1;
+}
+
+.item-details h3{
+    margin-bottom:8px;
+}
+
+.price{
+    color:green;
+    font-weight:bold;
+}
+
+.qty-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+}
+
+.qty-btn{
+    background:#2874f0;
+    color:white;
+    border:none;
+    padding:5px 10px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.remove-btn{
+    background:red;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.total-box{
+    background:white;
+    padding:20px;
+    margin-top:20px;
+    border-radius:10px;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.checkout-btn{
+    display:block;
+    width:100%;
+    margin-top:15px;
+    background:green;
+    color:white;
+    padding:12px;
+    text-decoration:none;
+    border-radius:8px;
+    text-align:center;
+    font-size:18px;
+}
+
+.empty{
+    text-align:center;
+    font-size:22px;
+    color:gray;
+}
+</style>
+</head>
+<body>
+
+<h1>🛒 MK Mega Store Cart</h1>
+
+<div class="cart-container" id="cartContainer"></div>
+
+<div class="total-box">
+    Total: ₹<span id="total">0</span>
+
+    <a href="checkout.html" class="checkout-btn">
+        Proceed to Checkout
+    </a>
+</div>
+
+<script>
+
+let cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+function renderCart(){
+
+    const container =
+    document.getElementById("cartContainer");
+
+    const totalEl =
+    document.getElementById("total");
+
+    container.innerHTML = "";
+
+    let total = 0;
+
+    if(cart.length === 0){
+        container.innerHTML =
+        '<p class="empty">Your cart is empty 😢</p>';
+        totalEl.innerText = "0";
+        return;
+    }
+
+    cart.forEach((item,index)=>{
+
+        total += item.price * item.quantity;
+
+        container.innerHTML += `
+        <div class="cart-item">
+
+            <img src="${item.image}" alt="">
+
+            <div class="item-details">
+                <h3>${item.name}</h3>
+
+                <p class="price">
+                ₹${item.price}
+                </p>
+
+                <div class="qty-controls">
+                    <button class="qty-btn"
+                    onclick="decreaseQty(${index})">-</button>
+
+                    <span>${item.quantity}</span>
+
+                    <button class="qty-btn"
+                    onclick="increaseQty(${index})">+</button>
+                </div>
+            </div>
+
+            <button class="remove-btn"
+            onclick="removeItem(${index})">
+            Remove
+            </button>
+
+        </div>
+        `;
+    });
+
+    totalEl.innerText = total;
+}
+
+function increaseQty(index){
+    cart[index].quantity++;
+    saveCart();
+}
+
+function decreaseQty(index){
+
+    if(cart[index].quantity > 1){
+        cart[index].quantity--;
+    }
+
+    saveCart();
+}
+
+function removeItem(index){
+    cart.splice(index,1);
+    saveCart();
+}
+
+function saveCart(){
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    renderCart();
+}
+
+renderCart();
+
+</script>
+
+</body>
+</html>
